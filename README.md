@@ -30,3 +30,10 @@ This library implements the classic Knuth/Dekker six-flop two-sum rather than De
 Non-finite inputs short-circuit to `[a + b, 0]`. That means `Infinity + -Infinity` returns `[NaN, 0]`, not `[NaN, NaN]`. If you are building a compensated summation over data that may contain infinities, carry the low part forward unconditionally; the residual is never NaN for the finite inputs you care about, and it is exactly zero whenever the high part is non-finite. Do not rely on the low part to signal that an overflow occurred — it won't.
 
 The single-number helper `splitHighLow` exists only to give a uniform `[high, low]` shape; its low part is always `0`. It is not a Veltkamp-style split.
+
+## Performance
+
+The window keeps a bounded buffer, so `push` is constant time and memory does not
+grow with the length of the stream. `peak` and `trough` are linear in the window
+size, which is the trade that keeps `push` cheap.
+
